@@ -4,6 +4,7 @@ import 'package:test_todo_manabie/core/theme/dark_theme.dart';
 import 'package:test_todo_manabie/core/theme/light_theme.dart';
 import 'package:test_todo_manabie/core/theme/text_theme.dart';
 import 'package:test_todo_manabie/core/values/app_color.dart';
+import 'package:test_todo_manabie/core/values/app_elevation.dart';
 
 class AppTheme {
   static ThemeData getAppTheme(bool isDarkMode) => isDarkMode
@@ -19,7 +20,7 @@ class AppTheme {
       primaryColor: colorScheme.primary,
       appBarTheme: AppBarTheme(
         color: colorScheme.background,
-        elevation: 0,
+        elevation: AppElevations.elevation_XXS,
         // titleTextStyle: ,
         iconTheme: const IconThemeData(color: AppColor.titleColor),
         brightness: colorScheme.brightness,

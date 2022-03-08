@@ -1,4 +1,6 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_todo_manabie/shelf/all_import.dart';
+import 'package:test_todo_manabie/views/screens/home/bloc/task_bloc.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -10,24 +12,32 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
+    BlocProvider.of<TaskBloc>(context).add(TaskDataLoaded());
     super.initState();
     FlutterNativeSplash.remove();
   }
+
   @override
   Widget build(BuildContext context) {
     return AutoTabsScaffold(
-      routes: const [HomeAllRoute(), HomeCompleteRoute(), HomeIncompleteRoute()],
+      routes: const [
+        HomeAllRoute(),
+        HomeCompleteRoute(),
+        HomeIncompleteRoute()
+      ],
       lazyLoad: false,
       animationDuration: Duration.zero,
       bottomNavigationBuilder: (_, tabsRouter) {
         return BottomNavigationBar(
           currentIndex: tabsRouter.activeIndex,
           onTap: tabsRouter.setActiveIndex,
-          items: const [
+          items: [
             BottomNavigationBarItem(
-                label: 'All', icon: Icon(Icons.list_alt)),
-            BottomNavigationBarItem(label: 'Complete', icon: Icon(Icons.done_outline)),
-            BottomNavigationBarItem(label: 'In Complete', icon: Icon(Icons.close)),
+                label: 'all'.tr, icon: const Icon(Icons.list_alt)),
+            BottomNavigationBarItem(
+                label: 'complete'.tr, icon: const Icon(Icons.done_outline)),
+            BottomNavigationBarItem(
+                label: 'inComplete'.tr, icon: const Icon(Icons.close)),
           ],
         );
       },

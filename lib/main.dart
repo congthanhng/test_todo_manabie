@@ -1,12 +1,17 @@
+import 'package:test_todo_manabie/data/providers/database.dart';
+import 'package:test_todo_manabie/data/providers/task_provider.dart';
 import 'package:test_todo_manabie/shelf/all_import.dart';
 
-void main() {
+void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  Get.put<AppRoute>(AppRoute());
+  await TodoDB.open('todo.db');
 
-  runApp(const MyApp());
+  Get.put<AppRoute>(AppRoute());
+  Get.lazyPut<TaskProvider>(()=>TaskProvider());
+
+  runApp(const TodoApp());
 }
 
 
