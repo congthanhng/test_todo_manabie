@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
         return BottomNavigationBar(
           currentIndex: tabsRouter.activeIndex,
           onTap: tabsRouter.setActiveIndex,
-          items: [
+          items: const [
             BottomNavigationBarItem(
                 label: 'All', icon: Icon(Icons.list_alt)),
             BottomNavigationBarItem(label: 'Complete', icon: Icon(Icons.done_outline)),
