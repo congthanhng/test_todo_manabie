@@ -3,30 +3,30 @@ part of 'task_bloc.dart';
 @immutable
 abstract class TaskEvent {}
 
-class TaskDataLoaded extends TaskEvent {
-  TaskDataLoaded();
+class TaskDataLoadEvent extends TaskEvent {
+  TaskDataLoadEvent();
 }
 
-class TaskNew extends TaskEvent {
+class TaskNewEvent extends TaskEvent {
   final TaskModel task;
 
-  TaskNew(this.task);
+  TaskNewEvent(this.task);
 }
 
-class TaskUpdate extends TaskEvent {
+class TaskUpdateEvent extends TaskEvent {
   final TaskModel task;
 
-  TaskUpdate(this.task);
+  TaskUpdateEvent(this.task);
 }
 
-class TaskDelete extends TaskEvent {
+class TaskDeleteEvent extends TaskEvent {
   final int taskId;
 
-  TaskDelete(this.taskId);
+  TaskDeleteEvent(this.taskId);
 }
 
-class TaskFailure extends TaskEvent {
+class TaskFailureEvent extends TaskEvent {
   final String? msg;
 
-  TaskFailure({this.msg});
+  TaskFailureEvent({this.msg});
 }

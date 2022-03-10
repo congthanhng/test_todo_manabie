@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-    BlocProvider.of<TaskBloc>(context).add(TaskDataLoaded());
+    BlocProvider.of<TaskBloc>(context).add(TaskDataLoadEvent());
     super.initState();
     FlutterNativeSplash.remove();
   }
@@ -22,17 +22,17 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return BlocListener<TaskBloc, TaskState>(
       listenWhen: (_, current) => [
-        TaskAddNewSuccess,
-        TaskUpdateSuccess,
-        TaskDeleteSuccess,
-        TaskFailured
+        TaskAddNewSuccessState,
+        TaskUpdateSuccessState,
+        TaskDeleteSuccessState,
+        TaskFailureState
       ].contains(current.runtimeType),
       listener: (context, state) {
         switch(state.runtimeType){
-          case TaskAddNewSuccess: ToastUtils.showToast(context: context, msg: 'notifyAddNewTaskSuccess'.tr);break;
-          case TaskUpdateSuccess: ToastUtils.showToast(context: context, msg: 'notifyUpdateTaskSuccess'.tr);break;
-          case TaskDeleteSuccess: ToastUtils.showToast(context: context, msg: 'notifyDeleteTaskSuccess'.tr);break;
-          case TaskFailured: ToastUtils.showErrorToast(context: context, msg: 'notifyErrorTask'.tr);break;
+          case TaskAddNewSuccessState: ToastUtils.showToast(context: context, msg: 'notifyAddNewTaskSuccess'.tr);break;
+          case TaskUpdateSuccessState: ToastUtils.showToast(context: context, msg: 'notifyUpdateTaskSuccess'.tr);break;
+          case TaskDeleteSuccessState: ToastUtils.showToast(context: context, msg: 'notifyDeleteTaskSuccess'.tr);break;
+          case TaskFailureState: ToastUtils.showErrorToast(context: context, msg: 'notifyErrorTask'.tr);break;
         }
       },
       child: AutoTabsScaffold(

@@ -7,22 +7,22 @@ class TaskState {
   const TaskState(this.data);
 }
 
-class TaskLoaded extends TaskState {
-  const TaskLoaded(HomeData data) : super(data);
+class TaskLoadedState extends TaskState {
+  const TaskLoadedState(HomeData data) : super(data);
 }
 
-class TaskAddNewSuccess extends TaskState {
-  const TaskAddNewSuccess(HomeData data) : super(data);
+class TaskAddNewSuccessState extends TaskState {
+  const TaskAddNewSuccessState(HomeData data) : super(data);
 }
 
-class TaskUpdateSuccess extends TaskState {
-  const TaskUpdateSuccess(HomeData data) : super(data);
+class TaskUpdateSuccessState extends TaskState {
+  const TaskUpdateSuccessState(HomeData data) : super(data);
 }
 
-class TaskDeleteSuccess extends TaskState {
-  const TaskDeleteSuccess(HomeData data) : super(data);
+class TaskDeleteSuccessState extends TaskState {
+  const TaskDeleteSuccessState(HomeData data) : super(data);
 }
 
-class TaskFailured extends TaskState {
-  const TaskFailured(HomeData data) : super(data);
+class TaskFailureState extends TaskState {
+  const TaskFailureState(HomeData data) : super(data);
 }

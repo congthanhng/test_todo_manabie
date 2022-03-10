@@ -12,23 +12,26 @@ part 'task_event.dart';
 part 'task_state.dart';
 
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
-  final taskProvider = Get.find<TaskProvider>();
 
-  // final homeData = HomeData();
+  TaskBloc({TaskProvider? taskProvider}) : super(TaskState(HomeData())) {
+    _taskProvider = taskProvider ?? Get.find<TaskProvider>();
 
-  TaskBloc() : super(TaskState(HomeData())) {
-    on<TaskDataLoaded>(_onTaskDataLoaded);
-    on<TaskNew>(_onTaskNew);
-    on<TaskUpdate>(_onTaskUpdate);
-    on<TaskDelete>(_onTaskDelete);
-    on<TaskFailure>(_onTaskFailure);
+    on<TaskDataLoadEvent>(_onTaskDataLoaded);
+    on<TaskNewEvent>(_onTaskNew);
+    on<TaskUpdateEvent>(_onTaskUpdate);
+    on<TaskDeleteEvent>(_onTaskDelete);
+    on<TaskFailureEvent>(_onTaskFailure);
   }
 
+  late TaskProvider _taskProvider;
+
+
+
   Future<void> _onTaskDataLoaded(
-    TaskDataLoaded event,
+    TaskDataLoadEvent event,
     Emitter<TaskState> emit,
   ) async {
-    List<TaskModel> tasks = await taskProvider.getTasks();
+    List<TaskModel> tasks = await _taskProvider.getTasks();
     var completedTasks = tasks.where((e) => e.isDone).toList();
     var inCompleteTasks = tasks.where((e) => e.isDone == false).toList();
     // print('tasks: ${tasks.length} - completedTasks: ${completedTasks.length} - inCompleteTasks: ${inCompleteTasks.length}');
@@ -42,53 +45,53 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     inCompletedList.addAllClearFirst(inCompleteTasks);
 
     // print('list: ${list.length} - completedList: ${completedList.length} - inCompleteTasks: ${inCompleteTasks.length}');
-    emit(TaskLoaded(state.data.copyWith(
+    emit(TaskLoadedState(state.data.copyWith(
         allTask: list,
         completeTasks: completedList,
         inCompleteTasks: inCompletedList)));
   }
 
   Future<void> _onTaskNew(
-    TaskNew event,
+    TaskNewEvent event,
     Emitter<TaskState> emit,
   ) async {
-    await taskProvider.insert(event.task).then(
+    await _taskProvider.insert(event.task).then(
             (value) {
-              add(TaskDataLoaded());
-              emit(TaskAddNewSuccess(HomeData()));
+              add(TaskDataLoadEvent());
+              emit(TaskAddNewSuccessState(HomeData()));
             },
-        onError: (err) => add(TaskFailure()));
+        onError: (err) => add(TaskFailureEvent()));
   }
 
   Future<void> _onTaskUpdate(
-    TaskUpdate event,
+    TaskUpdateEvent event,
     Emitter<TaskState> emit,
   ) async {
-    await taskProvider.update(event.task).then(
+    await _taskProvider.update(event.task).then(
             (value) {
-              add(TaskDataLoaded());
-              emit(TaskUpdateSuccess(HomeData()));
+              add(TaskDataLoadEvent());
+              emit(TaskUpdateSuccessState(HomeData()));
             },
-        onError: (err) => add(TaskFailure()));
+        onError: (err) => add(TaskFailureEvent()));
   }
 
   Future<void> _onTaskDelete(
-    TaskDelete event,
+    TaskDeleteEvent event,
     Emitter<TaskState> emit,
   ) async {
-    await taskProvider.delete(event.taskId).then(
+    await _taskProvider.delete(event.taskId).then(
         (value) {
-          add(TaskDataLoaded());
-          emit(TaskDeleteSuccess(HomeData()));
+          add(TaskDataLoadEvent());
+          emit(TaskDeleteSuccessState(HomeData()));
         }
         ,
-        onError: (err) => add(TaskFailure()));
+        onError: (err) => add(TaskFailureEvent()));
   }
 
   Future<void> _onTaskFailure(
-    TaskFailure event,
+    TaskFailureEvent event,
     Emitter<TaskState> emit,
   ) async {
-    emit(TaskFailured(HomeData()));
+    emit(TaskFailureState(HomeData()));
   }
 }

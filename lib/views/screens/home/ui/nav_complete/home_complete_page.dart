@@ -18,7 +18,7 @@ class HomeCompletePage extends StatelessWidget {
       ),
       body: BlocBuilder<TaskBloc, TaskState>(
           buildWhen: (_, current) => [
-            TaskLoaded,
+            TaskLoadedState,
             // JobListMapUpdateSuccess,
           ].contains(current.runtimeType),
           builder: (context, state) {

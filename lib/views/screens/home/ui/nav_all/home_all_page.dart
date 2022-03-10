@@ -29,7 +29,7 @@ class _HomeAllPageState extends State<HomeAllPage> {
           children: [
             BlocBuilder<TaskBloc, TaskState>(
                 buildWhen: (_, current) => [
-                      TaskLoaded,
+                      TaskLoadedState,
                       // TaskAddNewSuccess
                       // JobListMapUpdateSuccess,
                     ].contains(current.runtimeType),
@@ -54,7 +54,7 @@ class _HomeAllPageState extends State<HomeAllPage> {
                 onEditingComplete: () {
                   fieldNode.unfocus();
                   if (_controller.text.isNotBlank) {
-                    BlocProvider.of<TaskBloc>(context).add(TaskNew(
+                    BlocProvider.of<TaskBloc>(context).add(TaskNewEvent(
                         TaskModel(title: _controller.text, isDone: false)));
                     _controller.clear();
                   }

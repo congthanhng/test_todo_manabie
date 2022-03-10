@@ -19,7 +19,7 @@ class TaskItem extends StatelessWidget {
               // fillColor: MaterialStateProperty.resolveWith(getColor),
               value: item.isDone,
               onChanged: (bool? value) {
-                BlocProvider.of<TaskBloc>(context).add(TaskUpdate(TaskModel(
+                BlocProvider.of<TaskBloc>(context).add(TaskUpdateEvent(TaskModel(
                     taskId: item.taskId,
                     title: item.title,
                     isDone: !item.isDone)));
@@ -32,7 +32,7 @@ class TaskItem extends StatelessWidget {
               icon: const Icon(Icons.close),
               onPressed: () {
                 BlocProvider.of<TaskBloc>(context)
-                    .add(TaskDelete(item.taskId!));
+                    .add(TaskDeleteEvent(item.taskId!));
               },
             )
           ],
