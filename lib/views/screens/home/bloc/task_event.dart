@@ -25,8 +25,8 @@ class TaskDelete extends TaskEvent {
   TaskDelete(this.taskId);
 }
 
-class TaskToggle extends TaskEvent {
-  final TaskModel task;
+class TaskFailure extends TaskEvent {
+  final String? msg;
 
-  TaskToggle(this.task);
+  TaskFailure({this.msg});
 }

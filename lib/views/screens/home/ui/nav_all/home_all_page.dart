@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_todo_manabie/core/styles/app_gap_style.dart';
 import 'package:test_todo_manabie/data/models/task_model.dart';
 import 'package:test_todo_manabie/shelf/all_import.dart';
 import 'package:test_todo_manabie/views/screens/home/bloc/task_bloc.dart';
@@ -45,7 +46,7 @@ class _HomeAllPageState extends State<HomeAllPage> {
                       border: OutlineInputBorder(),
                       filled: true,
                       // hintText: 'Add task',
-                      labelText: 'Add task'
+                      labelText: 'addTask'.tr
                       // Icons
                       ),
                   onEditingComplete: () {
@@ -78,56 +79,73 @@ class _HomeAllPageState extends State<HomeAllPage> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          SizedBox(height: 6),
-          ...inCompleteTask.map((e)=>_buildItemTask(e).pOnly(bottom: 4)),
+          Gaps.hGap6,
+          ...inCompleteTask.map((e)=>_buildItemTask(e)),
           completedTasks.isNotEmpty
               ? ExpansionTile(
-                  title: Text('Completed: ${completedTasks.length}'),
+                  title: '${'completed'.tr}: ${completedTasks.length}'.text.make(),
                   // subtitle: Text('Trailing expansion arrow icon'),
                   children: <Widget>[
-                    ...completedTasks.map((e)=>_buildItemTask(e).pOnly(bottom: 4)),
+                    ...completedTasks.map((e)=>_buildItemTask(e)),
                   ],
                 )
-              : SizedBox()
+              : Gaps.empty
         ],
       ),
     );
   }
 
   Widget _buildItemTask(TaskModel item){
-     return Container(
-          decoration: BoxDecoration(
-            // border: Border.all(color: Colors.amber),
-              color: Colors.amber[200],
-              borderRadius: BorderRadius.circular(5)),
-          child: Row(
-
-            children: [
-              Checkbox(
-                checkColor: Colors.white,
-                // fillColor: MaterialStateProperty.resolveWith(getColor),
-                value: item.isDone,
-                onChanged: (bool? value) {
-                  BlocProvider.of<TaskBloc>(context).add(TaskUpdate(
-                      TaskModel(
-                          taskId: item.taskId,
-                          title: item.title,
-                          isDone: !item.isDone)));
+    // return Card(
+    //   color: Colors.amber[200],
+    //   child: ListTile(
+    //     leading: Checkbox(
+    //       checkColor: Colors.white,
+    //       // fillColor: MaterialStateProperty.resolveWith(getColor),
+    //       value: item.isDone,
+    //       onChanged: (bool? value) {
+    //         BlocProvider.of<TaskBloc>(context).add(TaskUpdate(
+    //             TaskModel(
+    //                 taskId: item.taskId,
+    //                 title: item.title,
+    //                 isDone: !item.isDone)));
+    //       },
+    //     ),
+    //       title: item.isDone?item.title.text.lineThrough.make():item.title.text.make(),
+    //   ),
+    // );
+     return Card(
+       color: Colors.amber[200],
+       child: Container(
+            // decoration: BoxDecoration(
+            //   // border: Border.all(color: Colors.amber),
+            //     color: Colors.amber[200],
+            //     borderRadius: BorderRadius.circular(5)),
+            child: Row(
+              children: [
+                Checkbox(
+                  checkColor: Colors.white,
+                  // fillColor: MaterialStateProperty.resolveWith(getColor),
+                  value: item.isDone,
+                  onChanged: (bool? value) {
+                    BlocProvider.of<TaskBloc>(context).add(TaskUpdate(
+                        TaskModel(
+                            taskId: item.taskId,
+                            title: item.title,
+                            isDone: !item.isDone)));
+                  },
+                ),
+                item.isDone?item.title.text.lineThrough.make().expand():item.title.text.make().expand(),
+                IconButton(
+                icon: Icon(Icons.close), onPressed: () {
+                  BlocProvider.of<TaskBloc>(context).add(TaskDelete(item.taskId!));
                 },
-              ),
-              item.isDone?item.title.text.lineThrough.make():item.title.text.make(),
-            ],
-          ).p4(),
-        ).px(4);
+                )
+              ],
+            ).p4(),
+          ).px(4),
+     );
   }
 
-  Widget _buildEmpty() {
-    return Center(
-      child: Text(
-        'Opps! \n'
-        'You have no task now. \nPlease add your tasks by using plus button below.',
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
+  Widget _buildEmpty() => 'emptyTask'.tr.text.center.make().centered();
 }

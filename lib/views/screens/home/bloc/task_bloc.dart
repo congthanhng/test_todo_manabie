@@ -22,11 +22,13 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<TaskNew>(_onTaskNew);
     on<TaskUpdate>(_onTaskUpdate);
     on<TaskDelete>(_onTaskDelete);
-    on<TaskToggle>(_onTaskToggle);
+    on<TaskFailure>(_onTaskFailure);
   }
 
-  Future<void> _onTaskDataLoaded(TaskDataLoaded event,
-      Emitter<TaskState> emit,) async {
+  Future<void> _onTaskDataLoaded(
+    TaskDataLoaded event,
+    Emitter<TaskState> emit,
+  ) async {
     List<TaskModel> tasks = await taskProvider.getTasks();
     var completedTasks = tasks.where((e) => e.isDone).toList();
     var inCompleteTasks = tasks.where((e) => e.isDone == false).toList();
@@ -41,38 +43,53 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     inCompletedList.addAllClearFirst(inCompleteTasks);
 
     // print('list: ${list.length} - completedList: ${completedList.length} - inCompleteTasks: ${inCompleteTasks.length}');
-    emit(TaskState(state.data.copyWith(
+    emit(TaskLoaded(state.data.copyWith(
         allTask: list,
         completeTasks: completedList,
-        inCompleteTasks: inCompletedList
-    )));
+        inCompleteTasks: inCompletedList)));
   }
 
-  Future<void> _onTaskNew(TaskNew event,
-      Emitter<TaskState> emit,) async {
-    TaskModel taskInserted = await taskProvider.insert(event.task);
-    //
-    // var list = state.data.allTask;
-    // list.add(taskInserted);
-    add(TaskDataLoaded());
+  Future<void> _onTaskNew(
+    TaskNew event,
+    Emitter<TaskState> emit,
+  ) async {
+    await taskProvider.insert(event.task).then(
+            (value) {
+              add(TaskDataLoaded());
+              emit(TaskAddNewSuccess(HomeData()));
+            },
+        onError: (err) => add(TaskFailure()));
   }
 
-  Future<void> _onTaskUpdate(TaskUpdate event,
-      Emitter<TaskState> emit,) async {
-    await taskProvider.update(event.task);
-
-    add(TaskDataLoaded());
+  Future<void> _onTaskUpdate(
+    TaskUpdate event,
+    Emitter<TaskState> emit,
+  ) async {
+    await taskProvider.update(event.task).then(
+            (value) {
+              add(TaskDataLoaded());
+              emit(TaskUpdateSuccess(HomeData()));
+            },
+        onError: (err) => add(TaskFailure()));
   }
 
-  Future<void> _onTaskDelete(TaskDelete event,
-      Emitter<TaskState> emit,) async {
-    emit(TaskState(state.data.copyWith()));
+  Future<void> _onTaskDelete(
+    TaskDelete event,
+    Emitter<TaskState> emit,
+  ) async {
+    await taskProvider.delete(event.taskId).then(
+        (value) {
+          add(TaskDataLoaded());
+          emit(TaskDeleteSuccess(HomeData()));
+        }
+        ,
+        onError: (err) => add(TaskFailure()));
   }
 
-  Future<void> _onTaskToggle(TaskToggle event,
-      Emitter<TaskState> emit,) async {
-    // if(event.task.isDone){
-    //   add(TaskUpdate(TaskModel(taskId: event.task.taskId,title: event.task.title,isDone: !event.task.isDone )));
-    // }
+  Future<void> _onTaskFailure(
+    TaskFailure event,
+    Emitter<TaskState> emit,
+  ) async {
+    emit(TaskFailured(HomeData()));
   }
 }
