@@ -17,4 +17,5 @@ create table ${AppConstant.TASKS_TABLE} (
 ''');
         });
   }
+  static Future close()async => db.close();
 }

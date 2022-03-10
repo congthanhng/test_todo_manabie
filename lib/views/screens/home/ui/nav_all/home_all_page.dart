@@ -27,7 +27,7 @@ class _HomeAllPageState extends State<HomeAllPage> {
           child: Column(
             children: [
               BlocBuilder<TaskBloc, TaskState>(
-                  buildWhen: (_, current) => ![
+                  buildWhen: (_, current) => [
                         TaskLoaded,
                         // JobListMapUpdateSuccess,
                       ].contains(current.runtimeType),
@@ -75,18 +75,21 @@ class _HomeAllPageState extends State<HomeAllPage> {
         : _buildTaskList(data.inCompleteTasks, data.completeTasks);
   }
 
-  Widget _buildTaskList(List<TaskModel> inCompleteTask, List<TaskModel> completedTasks) {
+  Widget _buildTaskList(
+      List<TaskModel> inCompleteTask, List<TaskModel> completedTasks) {
     return SingleChildScrollView(
       child: Column(
         children: [
           Gaps.hGap6,
-          ...inCompleteTask.map((e)=>_buildItemTask(e)),
+          ...inCompleteTask.map((e) => _buildItemTask(e)),
           completedTasks.isNotEmpty
               ? ExpansionTile(
-                  title: '${'completed'.tr}: ${completedTasks.length}'.text.make(),
+                  title:
+                      '${'completed'.tr}: ${completedTasks.length}'.text.make(),
+                  initiallyExpanded: true,
                   // subtitle: Text('Trailing expansion arrow icon'),
                   children: <Widget>[
-                    ...completedTasks.map((e)=>_buildItemTask(e)),
+                    ...completedTasks.map((e) => _buildItemTask(e)),
                   ],
                 )
               : Gaps.empty
@@ -95,7 +98,7 @@ class _HomeAllPageState extends State<HomeAllPage> {
     );
   }
 
-  Widget _buildItemTask(TaskModel item){
+  Widget _buildItemTask(TaskModel item) {
     // return Card(
     //   color: Colors.amber[200],
     //   child: ListTile(
@@ -114,37 +117,36 @@ class _HomeAllPageState extends State<HomeAllPage> {
     //       title: item.isDone?item.title.text.lineThrough.make():item.title.text.make(),
     //   ),
     // );
-     return Card(
-       color: Colors.amber[200],
-       child: Container(
-            // decoration: BoxDecoration(
-            //   // border: Border.all(color: Colors.amber),
-            //     color: Colors.amber[200],
-            //     borderRadius: BorderRadius.circular(5)),
-            child: Row(
-              children: [
-                Checkbox(
-                  checkColor: Colors.white,
-                  // fillColor: MaterialStateProperty.resolveWith(getColor),
-                  value: item.isDone,
-                  onChanged: (bool? value) {
-                    BlocProvider.of<TaskBloc>(context).add(TaskUpdate(
-                        TaskModel(
-                            taskId: item.taskId,
-                            title: item.title,
-                            isDone: !item.isDone)));
-                  },
-                ),
-                item.isDone?item.title.text.lineThrough.make().expand():item.title.text.make().expand(),
-                IconButton(
-                icon: Icon(Icons.close), onPressed: () {
-                  BlocProvider.of<TaskBloc>(context).add(TaskDelete(item.taskId!));
-                },
-                )
-              ],
-            ).p4(),
-          ).px(4),
-     );
+    return Card(
+      color: Colors.amber[200],
+      child: Container(
+        child: Row(
+          children: [
+            Checkbox(
+              checkColor: Colors.white,
+              // fillColor: MaterialStateProperty.resolveWith(getColor),
+              value: item.isDone,
+              onChanged: (bool? value) {
+                BlocProvider.of<TaskBloc>(context).add(TaskUpdate(TaskModel(
+                    taskId: item.taskId,
+                    title: item.title,
+                    isDone: !item.isDone)));
+              },
+            ),
+            item.isDone
+                ? item.title.text.lineThrough.make().expand()
+                : item.title.text.make().expand(),
+            IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () {
+                BlocProvider.of<TaskBloc>(context)
+                    .add(TaskDelete(item.taskId!));
+              },
+            )
+          ],
+        ).p4(),
+      ).px(4),
+    );
   }
 
   Widget _buildEmpty() => 'emptyTask'.tr.text.center.make().centered();

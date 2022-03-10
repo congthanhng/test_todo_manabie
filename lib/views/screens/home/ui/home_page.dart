@@ -29,10 +29,10 @@ class _HomePageState extends State<HomePage> {
       ].contains(current.runtimeType),
       listener: (context, state) {
         switch(state.runtimeType){
-          case TaskAddNewSuccess: ToastUtils.showToast(context: context, msg: 'Thêm Task thành công');break;
-          case TaskUpdateSuccess: ToastUtils.showToast(context: context, msg: 'Cập nhật Task thành công');break;
-          case TaskDeleteSuccess: ToastUtils.showToast(context: context, msg: 'Xoá Task thành công');break;
-          case TaskFailured: ToastUtils.showErrorToast(context: context, msg: 'Đã có lỗi xảy ra');break;
+          case TaskAddNewSuccess: ToastUtils.showToast(context: context, msg: 'notifyAddNewTaskSuccess'.tr);break;
+          case TaskUpdateSuccess: ToastUtils.showToast(context: context, msg: 'notifyUpdateTaskSuccess'.tr);break;
+          case TaskDeleteSuccess: ToastUtils.showToast(context: context, msg: 'notifyDeleteTaskSuccess'.tr);break;
+          case TaskFailured: ToastUtils.showErrorToast(context: context, msg: 'notifyErrorTask'.tr);break;
         }
       },
       child: AutoTabsScaffold(
