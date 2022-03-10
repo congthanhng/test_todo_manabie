@@ -30,6 +30,7 @@ class _HomeAllPageState extends State<HomeAllPage> {
             BlocBuilder<TaskBloc, TaskState>(
                 buildWhen: (_, current) => [
                       TaskLoaded,
+                      // TaskAddNewSuccess
                       // JobListMapUpdateSuccess,
                     ].contains(current.runtimeType),
                 builder: (context, state) {
@@ -55,17 +56,12 @@ class _HomeAllPageState extends State<HomeAllPage> {
                   if (_controller.text.isNotBlank) {
                     BlocProvider.of<TaskBloc>(context).add(TaskNew(
                         TaskModel(title: _controller.text, isDone: false)));
+                    _controller.clear();
                   }
                 })
           ],
         ),
         resizeToAvoidBottomInset: true
-        // floatingActionButton: FloatingActionButton(
-        //   child: const Icon(Icons.add),
-        //   onPressed: () {
-        //     // BlocProvider.of<TaskBloc>(context).add(TaskDataLoaded());
-        //   },
-        // ),
         );
   }
 
