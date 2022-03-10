@@ -3,19 +3,19 @@ class TaskModel {
   static const String task_title = 'title';
   static const String task_isDone = 'isDone';
 
-  int taskId;
+  int? taskId;
   String title;
   bool isDone;
 
   TaskModel({
-    required this.taskId,
+    this.taskId,
     required this.title,
     required this.isDone,
   });
 
   Map<String, dynamic> toMap() =>
       <String, dynamic>{
-        'taskId': taskId,
+        // 'taskId': taskId,
         'title': title,
         'isDone': isDone == true ? 1 : 0
       };

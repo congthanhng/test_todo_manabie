@@ -5,54 +5,127 @@ import 'package:test_todo_manabie/views/screens/home/bloc/task_bloc.dart';
 import 'package:test_todo_manabie/views/screens/home/model/home_data.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class HomeAllPage extends StatelessWidget {
+class HomeAllPage extends StatefulWidget {
   const HomeAllPage({Key? key}) : super(key: key);
+
+  @override
+  State<HomeAllPage> createState() => _HomeAllPageState();
+}
+
+class _HomeAllPageState extends State<HomeAllPage> {
+  final _controller = TextEditingController();
+  final FocusNode fieldNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('all'.tr),
-      ),
-      body: Container(
-        child: BlocBuilder<TaskBloc,TaskState>(
-            buildWhen: (_, current) => ![
-              TaskLoaded,
-              // JobListMapUpdateSuccess,
-            ].contains(current.runtimeType),
-            builder: (context, state) {
-              return _buildPages(state.data);
-            }
+        appBar: AppBar(
+          title: Text('all'.tr),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          BlocProvider.of<TaskBloc>(context).add(TaskDataLoaded());
-        },
+        body: Container(
+          child: Column(
+            children: [
+              BlocBuilder<TaskBloc, TaskState>(
+                  buildWhen: (_, current) => ![
+                        TaskLoaded,
+                        // JobListMapUpdateSuccess,
+                      ].contains(current.runtimeType),
+                  builder: (context, state) {
+                    // _controller.text = '';
+                    return _buildPages(state.data);
+                  }).expand(),
+              TextFormField(
+                  controller: _controller,
+                  focusNode: fieldNode,
+                  cursorColor: Colors.amber,
+                  decoration: InputDecoration(
+                      // Border
+                      enabledBorder: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(),
+                      border: OutlineInputBorder(),
+                      filled: true,
+                      // hintText: 'Add task',
+                      labelText: 'Add task'
+                      // Icons
+                      ),
+                  onEditingComplete: () {
+                    fieldNode.unfocus();
+                    if (_controller.text.isNotBlank) {
+                      BlocProvider.of<TaskBloc>(context).add(TaskNew(
+                          TaskModel(title: _controller.text, isDone: false)));
+                    }
+                  })
+            ],
+          ),
+        ),
+        resizeToAvoidBottomInset: true
+        // floatingActionButton: FloatingActionButton(
+        //   child: const Icon(Icons.add),
+        //   onPressed: () {
+        //     // BlocProvider.of<TaskBloc>(context).add(TaskDataLoaded());
+        //   },
+        // ),
+        );
+  }
+
+  Widget _buildPages(HomeData data) {
+    return data.allTask.isEmpty
+        ? _buildEmpty()
+        : _buildTaskList(data.inCompleteTasks, data.completeTasks);
+  }
+
+  Widget _buildTaskList(List<TaskModel> inCompleteTask, List<TaskModel> completedTasks) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(height: 6),
+          ...inCompleteTask.map((e)=>_buildItemTask(e).pOnly(bottom: 4)),
+          completedTasks.isNotEmpty
+              ? ExpansionTile(
+                  title: Text('Completed: ${completedTasks.length}'),
+                  // subtitle: Text('Trailing expansion arrow icon'),
+                  children: <Widget>[
+                    ...completedTasks.map((e)=>_buildItemTask(e).pOnly(bottom: 4)),
+                  ],
+                )
+              : SizedBox()
+        ],
       ),
     );
   }
 
-  Widget _buildPages(HomeData data){
-    return data.allTask.isEmpty?_buildEmpty():_buildTaskList(data.allTask);
-  }
+  Widget _buildItemTask(TaskModel item){
+     return Container(
+          decoration: BoxDecoration(
+            // border: Border.all(color: Colors.amber),
+              color: Colors.amber[200],
+              borderRadius: BorderRadius.circular(5)),
+          child: Row(
 
-  Widget _buildTaskList(List<TaskModel> tasks){
-    return ListView.separated(
-      separatorBuilder: (context,index)=>SizedBox(height: 10,),
-      itemCount: tasks.length,
-      itemBuilder: (BuildContext context, int index) {
-        return tasks[index].title.text.make();
-      },
-    );
+            children: [
+              Checkbox(
+                checkColor: Colors.white,
+                // fillColor: MaterialStateProperty.resolveWith(getColor),
+                value: item.isDone,
+                onChanged: (bool? value) {
+                  BlocProvider.of<TaskBloc>(context).add(TaskUpdate(
+                      TaskModel(
+                          taskId: item.taskId,
+                          title: item.title,
+                          isDone: !item.isDone)));
+                },
+              ),
+              item.isDone?item.title.text.lineThrough.make():item.title.text.make(),
+            ],
+          ).p4(),
+        ).px(4);
   }
 
   Widget _buildEmpty() {
     return Center(
       child: Text(
         'Opps! \n'
-            'You have no task now. \nPlease add your tasks by using plus button below.',
+        'You have no task now. \nPlease add your tasks by using plus button below.',
         textAlign: TextAlign.center,
       ),
     );
