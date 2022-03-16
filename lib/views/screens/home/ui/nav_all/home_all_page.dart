@@ -61,13 +61,14 @@ class _HomeAllPageState extends State<HomeAllPage> {
                 })
           ],
         ),
-        resizeToAvoidBottomInset: true
-        );
+        resizeToAvoidBottomInset: true);
   }
 
   Widget _buildPages(HomeData data) {
     return data.allTask.isEmpty
-        ? EmptyWidget(content: 'emptyTask'.tr,)
+        ? EmptyWidget(
+            content: 'emptyTask'.tr,
+          )
         : _buildTaskList(data.inCompleteTasks, data.completeTasks);
   }
 
@@ -77,7 +78,9 @@ class _HomeAllPageState extends State<HomeAllPage> {
       child: Column(
         children: [
           Gaps.hGap6,
-          ...inCompleteTask.map((e) => TaskItem(item: e,)),
+          ...inCompleteTask.map((e) => TaskItem(
+                item: e,
+              )),
           completedTasks.isNotEmpty
               ? ExpansionTile(
                   title:
@@ -85,7 +88,9 @@ class _HomeAllPageState extends State<HomeAllPage> {
                   initiallyExpanded: true,
                   // subtitle: Text('Trailing expansion arrow icon'),
                   children: <Widget>[
-                    ...completedTasks.map((e) => TaskItem(item: e,)),
+                    ...completedTasks.map((e) => TaskItem(
+                          item: e,
+                        )),
                   ],
                 )
               : Gaps.empty
@@ -93,5 +98,4 @@ class _HomeAllPageState extends State<HomeAllPage> {
       ),
     );
   }
-
 }

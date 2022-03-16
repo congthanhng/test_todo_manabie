@@ -5,17 +5,14 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:test_todo_manabie/data/providers/database.dart';
-import 'package:test_todo_manabie/data/providers/impl/task_provider_impl.dart';
 import 'package:test_todo_manabie/data/providers/task_provider.dart';
 import 'package:test_todo_manabie/shelf/all_import.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:test_todo_manabie/views/screens/home/bloc/task_bloc.dart';
 
-import 'mock_data.dart';
-
-class MockTaskBloc extends MockBloc<TaskStateFake,TaskEventFake> implements TaskBloc{}
+class MockTaskBloc extends MockBloc<TaskStateFake, TaskEventFake>
+    implements TaskBloc {}
 
 class TaskStateFake extends Fake implements TaskState {}
 
