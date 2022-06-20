@@ -33,7 +33,7 @@ dependencies:
   #Widget or UI support
   cupertino_icons: ^1.0.2
   velocity_x: ^3.4.0
-  overlay_support: ^1.2.1
+  overlay_support: ^2.0.0
   flutter_native_splash: ^2.1.0
   google_fonts: 3.0.1
 
