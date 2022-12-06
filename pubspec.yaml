@@ -45,7 +45,7 @@ dependencies:
   auto_route: ^5.0.0
   flutter_bloc: ^8.0.1
   sqflite: ^2.0.2
-  path: 1.8.2
+  path: 1.8.3
 
   #test
   bloc_test: ^9.0.3
