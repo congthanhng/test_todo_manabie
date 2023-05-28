@@ -42,7 +42,7 @@ dependencies:
 
   # core
   get: ^4.6.1
-  auto_route: ^5.0.0
+  auto_route: ^7.0.0
   flutter_bloc: ^8.0.1
   sqflite: ^2.0.2
   path: 1.8.3
